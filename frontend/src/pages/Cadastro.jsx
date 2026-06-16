@@ -110,6 +110,10 @@ function Cadastro() {
             <input id="confSenha" value={confSenha} onChange={(e) => setConfSenha(e.target.value)} type="password" className="w-full bg-white border border-orange-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition"/>
           </div>
 
+          <div className="text-center">
+            <NavLink to="/login" className="text-orange-400 hover:text-orange-500 cursor-pointer transition">Já possui cadastro? <strong>Fazer Login</strong></NavLink>
+          </div>
+
           <button type="submit" className="w-full py-3 rounded-xl font-semibold text-white bg-orange-500 hover:bg-orange-600 transition shadow-md">
             SE TORNAR UM AGENTE
           </button>

@@ -40,7 +40,7 @@ function Login() {
       if (resposta.data.token) {
         localStorage.setItem("token", resposta.data.token);
       }
-      navigate("/dashboard");
+      navigate("/inicio");
 
     } catch (erro) {
       console.log(erro.response?.data);
@@ -75,6 +75,10 @@ function Login() {
           <div>
             <label htmlFor="senha" className="block text-slate-700 mb-2">Senha:</label>
             <input id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} type="password" className="w-full bg-white border border-orange-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition"/>
+          </div>
+          
+          <div className="text-center">
+            <NavLink to="/cadastro" className="text-orange-400 hover:text-orange-500 cursor-pointer transition">Não possui cadastro? <strong>Fazer Cadastro</strong></NavLink>
           </div>
 
           <button type="submit" className="w-full py-3 rounded-xl font-semibold text-white bg-orange-500 hover:bg-orange-600 transition shadow-md">
