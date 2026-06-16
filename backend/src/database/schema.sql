@@ -10,6 +10,16 @@ CREATE TABLE usuario (
     carteira INT
 );
 
+CREATE TABLE time (
+    id_time INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao VARCHAR(500) NOT NULL DEFAULT 'Nenhuma descrição.',
+    id_usuario INT NOT NULL,
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuario(id_usuario)
+);
+
 CREATE TABLE heroi (
 	id_heroi INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -18,8 +28,18 @@ CREATE TABLE heroi (
     poder INT NOT NULL,
     preco_compra INT NOT NULL,
     preco_venda INT NOT NULL,
-    id_usuario INT,
-    
-    FOREIGN KEY (id_usuario)
-		REFERENCES usuario(id_usuario)
+    id_time INT,
+
+    FOREIGN KEY (id_time)
+        REFERENCES time(id_time)
+);
+
+CREATE TABLE missao (
+    id_missao INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao VARCHAR(500) NOT NULL DEFAULT 'Nenhuma descrição.',
+    id_heroi INT NOT NULL,
+
+    FOREIGN KEY (id_heroi)
+        REFERENCES heroi(id_heroi)
 );
