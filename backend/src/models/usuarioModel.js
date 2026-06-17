@@ -17,4 +17,16 @@ async function buscarPorEmail(email) {
     return rows[0];
 }
 
-module.exports = { criarUsuario, buscarPorEmail };
+async function buscarUsuario(usuario) {
+    const [rows] = await db.execute('SELECT * FROM usuario WHERE usuario = ?', [usuario]);
+
+    return rows[0];
+}
+
+async function buscarPorId(id_usuario) { //Mostrar as informações dentro da pagina inicial
+    const [rows] = await db.query('SELECT nome, usuario, email, carteira FROM usuario WHERE id_usuario = ?', [id_usuario]);
+
+    return rows[0];
+}
+
+module.exports = { criarUsuario, buscarPorEmail, buscarUsuario, buscarPorId };

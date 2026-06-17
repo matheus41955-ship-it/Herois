@@ -4,10 +4,10 @@ USE herois;
 CREATE TABLE usuario (
 	id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    usuario VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
+    usuario VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
-    carteira INT
+    carteira INT DEFAULT 500
 );
 
 CREATE TABLE time (
