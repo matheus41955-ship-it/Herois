@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import api from "../../api/api";
 
@@ -35,7 +34,7 @@ function Header() {
                     <p className="font-bold">💵 Carteira: {carteira}</p>
                 </div>
                 <div className="justify-self-end flex items-center gap-3">
-                    <NavLink to="/cadastro" className="bg-white text-[#242222] font-bold hover:bg-slate-200 cursor-pointer transition rounded p-1">Configurações</NavLink>
+                    <NavLink to="/perfil" className="bg-white text-[#242222] font-bold hover:bg-slate-200 cursor-pointer transition rounded p-1">Configurações</NavLink>
                     <button onClick={Logout} className="bg-orange-500 text-white font-bold hover:bg-orange-600 cursor-pointer transition rounded p-1">Logout</button>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-const { cadastroSchema, loginSchema } = require('../schemas/usuarioSchema')
+const { cadastroSchema, loginSchema, editarPerfilSchema } = require('../schemas/usuarioSchema')
 const bcrypt = require('bcrypt');
 const usuarioModel = require('../models/usuarioModel');
 
@@ -98,10 +98,48 @@ async function mostrarInformacoes(req, res) {
             nome: usuario.nome,
             usuario: usuario.usuario,
             email: usuario.email,
-            carteira: usuario.carteira
+            carteira: usuario.carteira,
+            foto_perfil: usuario.foto_perfil
         })
     } catch (erro) {
         return res.status(500).json({ erro: 'Erro no servidor' });
     }
 }
-module.exports = { cadastrar, login, mostrarInformacoes }
+
+async function editarPerfil(req, res) {
+    try {
+        const validacao = editarPerfilSchema.safeParse(req.body);
+        if (!validacao.success) {
+            return res.status(400).json({ erros: validacao.error.flatten().fieldErrors });
+        }
+
+        const id_usuario = req.usuarioLogado.id;
+        const { nome, usuario, email, senhaAtual, novaSenha } = validacao.data;
+        
+        const usuarioBanco = await usuarioModel.buscarPorId(id_usuario);
+        if (!usuarioBanco) {
+            return res.status(404).json({ erro: "Usuário não encontrado" });
+        }
+
+        const senhCorreta = await bcrypt.compare(senhaAtual, usuarioBanco.senha);
+        if (!senhCorreta) {
+            return res.status(401).json({ erro: "Senha incorreta" });
+        }
+
+        let hashSenha = null;
+        if (novaSenha) {
+            hashSenha = await bcrypt.hash(novaSenha, 10);
+        }
+
+        await usuarioModel.editarPerfil(id_usuario, nome, usuario, email, hashSenha);
+
+        return res.status(200).json({ mensagem: "Perfil atualizad com sucesso!" });
+
+
+    } catch (erro) {
+        console.error(erro);
+
+        return res.status(500).json({ erro: "Erro interno no servidor" });
+    }
+}
+module.exports = { cadastrar, login, mostrarInformacoes, editarPerfil }

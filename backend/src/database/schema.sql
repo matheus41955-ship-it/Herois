@@ -7,6 +7,7 @@ CREATE TABLE usuario (
     usuario VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
+    foto_perfil VARCHAR(2048) NOT NULL DEFAULT 'https://upload.wikimedia.org/wikipedia/commons/0/03/Sem_imagem.jpg',
     carteira INT DEFAULT 500
 );
 
@@ -26,6 +27,7 @@ CREATE TABLE heroi (
     avatar VARCHAR(2048) NOT NULL DEFAULT 'https://upload.wikimedia.org/wikipedia/commons/0/03/Sem_imagem.jpg',
     classe ENUM('herói','vilão','anti-heroi') NOT NULL,
     poder INT NOT NULL,
+    nivel INT NOT NULL DEFAULT 1,
     preco_compra INT NOT NULL,
     preco_venda INT NOT NULL,
     id_time INT,

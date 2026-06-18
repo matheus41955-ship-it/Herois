@@ -4,6 +4,7 @@ import RotaPrivada from './assets/components/RotaPrivada'
 import Cadastro from './pages/Cadastro'
 import Login from './pages/Login'
 import Inicio from './pages/Inicio'
+import Perfil from './pages/Perfil'
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path='/login' element={<Login />} />
         <Route path='/cadastro' element={<Cadastro />} />
+
         <Route path='/inicio' element={<RotaPrivada><Inicio /></RotaPrivada>} />
+        <Route path='/perfil' element={<RotaPrivada><Perfil /></RotaPrivada>} />
       </Routes>
     </BrowserRouter>
   )
