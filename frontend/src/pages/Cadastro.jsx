@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-import api from "../api/api";
 import cadastroSchema from "../schemas/cadastroSchema";
+import { useCadastro } from "../hooks/useCadastro";
+import { toast } from "react-toastify";
 
 function Cadastro() {
   const [nome, setNome] = useState("");
@@ -10,24 +11,14 @@ function Cadastro() {
   const [senha, setSenha] = useState("");
   const [confSenha, setConfSenha] = useState("");
   
-  const [erro, setErro] = useState("")
-  const [sucesso, setSucesso] = useState("");
-  
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      localStorage.removeItem("token");
-      return
-    }
-  }, []);
+  const { mutate, isPending } = useCadastro();
 
   async function handleCadastro(e) {
     e.preventDefault();
-    setErro(""); // Limpar o erro antes de validar
 
     if (senha !== confSenha) {
-        setErro('As senhas não conferem');
+        toast.error('As senhas não conferem');
         return;
     }
 
@@ -36,34 +27,17 @@ function Cadastro() {
 
     if (!resultado.success) {
       const erros = resultado.error.flatten().fieldErrors;
-
-      const mensagem = erros.nome?.[0] || erros.usuario?.[0] || erros.email?.[0] || erros.senha?.[0] || "Erro de validação";
-
-      setErro(mensagem);
+      toast.error(erros.nome?.[0] || erros.usuario?.[0] || erros.email?.[0] || erros.senha?.[0] || "Erro de validação");
       return;
     }
 
-    try {
-      const resposta = await api.post("/usuarios/cadastro", {
-        nome,
-        usuario,
-        email,
-        senha,
-      });
-
-      setErro("");
-      setSucesso(resposta.data.mensagem);
-
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500)
-
-    } catch (erro) {
-      const mensagem = erro.response?.data?.erro || "Erro no cadastro";
-
-      setErro(mensagem);
-      setSucesso(""); // limpa sucesso
-    }
+    mutate({ nome, usuario, email, senha }, {
+      onSuccess: () => {
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+      }
+    })
   }
 
   return (
@@ -78,9 +52,6 @@ function Cadastro() {
             Forme seu time e caminhe para a vitória!
           </p>
         </div>
-
-        {erro && (<p className="text-red-500 text-sm mb-4 text-center">{erro}</p>)}
-        {sucesso && (<p className="text-green-600 text-sm mb-4 text-center">{sucesso}</p>)}
 
         <form className="space-y-5" onSubmit={handleCadastro}>
 
@@ -114,7 +85,7 @@ function Cadastro() {
             <NavLink to="/login" className="text-orange-400 hover:text-orange-500 cursor-pointer transition">Já possui cadastro? <strong>Fazer Login</strong></NavLink>
           </div>
 
-          <button type="submit" className="w-full py-3 rounded-xl font-semibold text-white bg-orange-500 hover:bg-orange-600 transition shadow-md">
+          <button type="submit" disabled={isPending} className="w-full py-3 rounded-xl font-semibold text-white bg-orange-500 hover:bg-orange-600 transition shadow-md disabled:opacity-50">
             SE TORNAR UM AGENTE
           </button>
 

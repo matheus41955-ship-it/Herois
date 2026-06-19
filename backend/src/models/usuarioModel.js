@@ -24,7 +24,13 @@ async function buscarUsuario(usuario) {
 }
 
 async function buscarPorId(id_usuario) { //Mostrar as informações dentro da pagina inicial
-    const [rows] = await db.query('SELECT nome, foto_perfil, usuario, email, carteira FROM usuario WHERE id_usuario = ?', [id_usuario]);
+    const [rows] = await db.execute('SELECT nome, foto_perfil, usuario, email, carteira FROM usuario WHERE id_usuario = ?', [id_usuario]);
+
+    return rows[0];
+}
+
+async function buscarSenhaPorId(id_usuario) { // Pra validar a senha
+    const [rows] = await db.execute('SELECT senha_hash FROM usuario WHERE id_usuario = ?', [id_usuario]);
 
     return rows[0];
 }
@@ -32,7 +38,7 @@ async function buscarPorId(id_usuario) { //Mostrar as informações dentro da pa
 async function editarPerfil(id_usuario, nome, usuario, email, hashSenha) {
     if (hashSenha) {
         const sql = `
-        UPDATE usuarios
+        UPDATE usuario
         SET
             nome = ?,
             usuario = ?,
@@ -44,7 +50,7 @@ async function editarPerfil(id_usuario, nome, usuario, email, hashSenha) {
         await db.execute(sql, [nome, usuario, email, hashSenha, id_usuario]);
     } else {
         const sql = `
-        UPDATE usuarios
+        UPDATE usuario
         SET
             nome = ?,
             usuario = ?,
@@ -56,4 +62,14 @@ async function editarPerfil(id_usuario, nome, usuario, email, hashSenha) {
     }
 }
 
-module.exports = { criarUsuario, buscarPorEmail, buscarUsuario, buscarPorId, editarPerfil };
+async function atualizarFoto(id_usuario, urlImagem) {
+    const sql = `
+    UPDATE usuario
+    SET foto_perfil = ?
+    WHERE id_usuario = ?
+    `;
+
+    await db.execute(sql, [urlImagem, id_usuario]);
+}
+
+module.exports = { criarUsuario, buscarPorEmail, buscarUsuario, buscarPorId, buscarSenhaPorId, editarPerfil, atualizarFoto };

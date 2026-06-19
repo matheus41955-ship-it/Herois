@@ -1,22 +1,10 @@
-import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import api from "../../api/api";
+import { useUsuario } from "../../hooks/useUsuario";
 
 function Header() {
-    const [usuario, setUsuario] = useState("");
-    const [carteira, setCarteira] = useState(0);
-
-    useEffect(() => {
-        async function carregarDadosUsuario() {
-            const { data } = await api.get('/usuarios/home');
-            setUsuario(data.usuario);
-            setCarteira(data.carteira);
-        }
-
-        carregarDadosUsuario();
-    }, [])
-
     const navigate = useNavigate();
+
+    const { data, isLoading } = useUsuario();
 
     function Logout() {
         localStorage.removeItem('token');
@@ -29,9 +17,9 @@ function Header() {
                 <h1 className=" text-transparent font-bold text-4xl bg-linear-to-r from-orange-300 to-orange-400 bg-clip-text">SALA DOS HERÓIS</h1>
             </header>
             <div className="w-screen h-16 bg-gray-900 border-b-2 border-b-orange-400 shadow-md shadow-orange-500/50 grid grid-cols-3 items-center px-6">
-                <div className="font-bold justify-self-start">Olá, {usuario}!</div>
+                <div className="font-bold justify-self-start">{isLoading? "Carregando..." : `Olá, ${data?.usuario}!`}</div>
                 <div className="justify-self-center">
-                    <p className="font-bold">💵 Carteira: {carteira}</p>
+                    <p className="font-bold">💵 Carteira: {data?.carteira}</p>
                 </div>
                 <div className="justify-self-end flex items-center gap-3">
                     <NavLink to="/perfil" className="bg-white text-[#242222] font-bold hover:bg-slate-200 cursor-pointer transition rounded p-1">Configurações</NavLink>

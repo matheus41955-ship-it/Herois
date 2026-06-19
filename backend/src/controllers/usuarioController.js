@@ -116,13 +116,13 @@ async function editarPerfil(req, res) {
         const id_usuario = req.usuarioLogado.id;
         const { nome, usuario, email, senhaAtual, novaSenha } = validacao.data;
         
-        const usuarioBanco = await usuarioModel.buscarPorId(id_usuario);
+        const usuarioBanco = await usuarioModel.buscarSenhaPorId(id_usuario);
         if (!usuarioBanco) {
             return res.status(404).json({ erro: "Usuário não encontrado" });
         }
 
-        const senhCorreta = await bcrypt.compare(senhaAtual, usuarioBanco.senha);
-        if (!senhCorreta) {
+        const senhaCorreta = await bcrypt.compare(senhaAtual, usuarioBanco.senha_hash);
+        if (!senhaCorreta) {
             return res.status(401).json({ erro: "Senha incorreta" });
         }
 
@@ -133,7 +133,7 @@ async function editarPerfil(req, res) {
 
         await usuarioModel.editarPerfil(id_usuario, nome, usuario, email, hashSenha);
 
-        return res.status(200).json({ mensagem: "Perfil atualizad com sucesso!" });
+        return res.status(200).json({ mensagem: "Perfil atualizado com sucesso!" });
 
 
     } catch (erro) {
@@ -142,4 +142,28 @@ async function editarPerfil(req, res) {
         return res.status(500).json({ erro: "Erro interno no servidor" });
     }
 }
-module.exports = { cadastrar, login, mostrarInformacoes, editarPerfil }
+
+async function atualizarFoto(req, res) {
+    try {
+        const id_usuario = req.usuarioLogado.id;
+        if (!req.file) {
+            return res.status(400).json({ erro: "Nenhuma imagem enviada" });
+        }
+
+        const porta = process.env.PORT
+        
+        const urlImagem = `http://localhost:${porta}/${req.file.filename}`;
+
+        await usuarioModel.atualizarFoto(id_usuario, urlImagem);
+        res.json({
+            mensagem: "Foto atualizada com sucesso!",
+            url: urlImagem
+        });
+
+    } catch (erro) {
+        console.error(erro);
+        return res.status(500).json({ erro: "Erro ao atualizar a foto" });
+    }
+}
+
+module.exports = { cadastrar, login, mostrarInformacoes, editarPerfil, atualizarFoto }
