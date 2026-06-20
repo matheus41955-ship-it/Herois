@@ -8,11 +8,12 @@ import { useUsuario } from "../hooks/useUsuario";
 import { useEditarUsuario } from "../hooks/useEditarUsuario";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 
 function Perfil() {
     const { data, isLoading, isError } = useUsuario();
-    const mutation = useEditarUsuario();
+    const { mutate, isPending } = useEditarUsuario();
     const queryClient = useQueryClient();
 
     // Dados de edição
@@ -24,22 +25,17 @@ function Perfil() {
     const [confSenha, setConfSenha] = useState('');
 
     const [popup, setPopup] = useState(false);
-    const [sucesso, setSucesso] = useState('');
-    const [erro, setErro] = useState('');
 
     function abrirPopup() {
         setNomeEdit(data?.nome || "");
         setUsuarioEdit(data?.usuario || "");
         setEmailEdit(data?.email || "");
 
-        setErro('');
-        setSucesso('');
         setPopup(true);
     }
 
     function atualizarInformacoes(e) {
         e.preventDefault();
-        setErro('');
 
         const resultado = editarInfoSchema.safeParse({
             nome: nomeEdit,
@@ -62,12 +58,12 @@ function Perfil() {
                 erros.confSenha?.[0] ||
                 "Erro de validação";
 
-            setErro(mensagem);
+            toast.error(mensagem);
             return;
         }
 
         if (novaSenha !== confSenha) {
-            setErro("As senhas não conferem");
+            toast.error("As senhas não conferem.")
             return;
         }
 
@@ -82,25 +78,23 @@ function Perfil() {
             dados.novaSenha = novaSenha;
         }
 
-        mutation.mutate(dados, {
-            onSuccess: (res) => {
-                setSucesso(res.mensagem);
-
+        mutate(dados, {
+            onSuccess: () => {
                 setSenhaAtual('');
                 setNovaSenha('');
                 setConfSenha('');
                 setPopup(false);
-
-                setTimeout(() => setSucesso(''), 1500);
-            },
-            onError: (erro) => {
-                setErro(erro.response?.data?.erro || "Erro ao atualizar perfil");
             }
-        });
+        })
     }
 
-    if (isLoading) return <p className="text-white">Carregando...</p>;
-    if (isError) return <p className="text-white">Erro ao carregar usuário</p>;
+    if (isLoading) {
+        <p className="text-gray-600">Carregando...</p>
+    }
+
+    if (isError) {
+        <p className="text-red-500">Erro a carregar as informações de usuário</p>
+    }
 
     return (
         <div className="min-h-screen flex">
@@ -108,12 +102,6 @@ function Perfil() {
                 <Header />
 
                 <div className="min-w-screen p-10">
-
-                    {sucesso && (
-                        <div className="bg-green-100 border border-green-300 text-green-700 rounded-lg p-3 mb-4 text-center">
-                            {sucesso}
-                        </div>
-                    )}
 
                     <div className="bg-white w-full rounded-3xl p-10 shadow-xl">
 
@@ -161,12 +149,6 @@ function Perfil() {
                             <h2 className="text-transparent font-bold text-3xl bg-linear-to-r from-orange-400 to-orange-500 bg-clip-text mb-5">
                                 Editar Perfil
                             </h2>
-
-                            {erro && (
-                                <div className="bg-red-100 text-red-700 p-3 mb-4 rounded text-center">
-                                    {erro}
-                                </div>
-                            )}
                             
 
                             <h3 className="font-bold text-xl mb-2 text-black">Editar Informações Básicas</h3>
@@ -193,7 +175,7 @@ function Perfil() {
 
                             <div className="flex justify-center gap-5 mt-5">
                                 <button onClick={() => setPopup(false)} className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer transition font-bold hover:bg-red-600">Cancelar</button>
-                                <button onClick={atualizarInformacoes} className="bg-orange-500 text-white px-4 py-2 rounded cursor-pointer transition font-bold hover:bg-orange-600">Salvar</button>
+                                <button onClick={atualizarInformacoes} disabled={isPending} className="bg-orange-500 text-white px-4 py-2 rounded cursor-pointer transition font-bold hover:bg-orange-600 disabled:opacity-50">{isPending ? "Carregando..." : "Salvar"}</button>
                             </div>
 
                         </div>

@@ -11,3 +11,9 @@ export const atualizarUsuario = async (dados) => {
     const { data } = await api.put('/usuarios/perfil', dados);
     return data;
 }
+
+// Atualizar Foto
+export const uploadFoto = async (formData) => {
+    const { data } = await api.put('/usuarios/foto', formData);
+    return data;
+}

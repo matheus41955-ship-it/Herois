@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { atualizarUsuario } from "../services/usuarioService";
+import { atualizarUsuario, uploadFoto } from "../services/usuarioService";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export function useEditarUsuario() {
     const queryClient = useQueryClient();
@@ -7,8 +9,20 @@ export function useEditarUsuario() {
     return useMutation({
         mutationFn: atualizarUsuario,
 
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['usuario'] });
+            toast.success(data?.mensagem || 'Dados atualizados com sucesso!');
+        },
+
+        onError: (erro) => {
+            if (axios.isAxiosError(erro)) {
+                const mensagemDoBackend = erro.response?.data?.erro;
+                if (mensagemDoBackend) {
+                    toast.error(mensagemDoBackend);
+                    return;
+                }
+            }
+            toast.error(erro.message || "Erro ao atualizar os dados");
         }
     })
 }
@@ -17,12 +31,11 @@ export function useUploadFoto() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (formData) => {
-            const res = await api.put('/usuarios/foto', formData);
-            return res.data;
-        },
+        mutationFn: uploadFoto,
 
         onSuccess: (data) => {
+            toast.success(data?.mensagem);
+
             queryClient.setQueryData(['usuario'], (old) => {
                 if (!old) return old;
 
@@ -31,6 +44,17 @@ export function useUploadFoto() {
                     foto_perfil: data.url
                 }
             });
+        },
+
+        onError: (erro) => {
+            if (axios.isAxiosError(erro)) {
+                const mensagemDoBackend = erro.response?.data?.erro;
+                if (mensagemDoBackend) {
+                    toast.error(mensagemDoBackend);
+                    return;
+                }
+            }
+            toast.error(erro.message || "Erro ao atualizar a foto");
         }
     })
 }

@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-import api from "../api/api";
 import { loginSchema } from "../schemas/loginSchema";
+import { useLogin } from "../hooks/useCadastro";
+import { toast } from "react-toastify";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [erro, setErro] = useState("")
+
   const navigate = useNavigate();
+  const { mutate, isPending } = useLogin();
 
   async function handleLogin(e) {
     e.preventDefault();
-    setErro(""); // Limpar o erro antes de validar
 
     if (localStorage.getItem("token")) {
       localStorage.removeItem("token");
@@ -21,34 +22,17 @@ function Login() {
     //Validação Zod
     const resultado = loginSchema.safeParse({ email, senha });
 
-
     if (!resultado.success) {
       const erros = resultado.error.flatten().fieldErrors;
-
-      const mensagem = erros.email?.[0] || erros.senha?.[0] || "Erro de validação";
-
-      setErro(mensagem);
+      toast.error(erros.email?.[0] || erros.senha?.[0] || "Erro ao validar, tente novamente mais tarde");
       return;
     }
 
-    try {
-      const resposta = await api.post("/usuarios/login", {
-        email,
-        senha,
-      });
-
-      if (resposta.data.token) {
-        localStorage.setItem("token", resposta.data.token);
+    mutate({ email, senha }, {
+      onSuccess: () => {
+        navigate("/inicio");
       }
-      navigate("/inicio");
-
-    } catch (erro) {
-      console.log(erro.response?.data);
-
-      const mensagem = erro.response?.data?.erro || "Erro no login";
-
-      setErro(mensagem);
-    }
+    });
   }
 
   return (
@@ -63,8 +47,6 @@ function Login() {
             Realize seu cadastro
           </p>
         </div>
-
-        {erro && (<p className="text-red-500 text-sm mb-4 text-center">{erro}</p>)}
 
         <form className="space-y-5" onSubmit={handleLogin}>
           <div>
@@ -81,8 +63,8 @@ function Login() {
             <NavLink to="/cadastro" className="text-orange-400 hover:text-orange-500 cursor-pointer transition">Não possui cadastro? <strong>Fazer Cadastro</strong></NavLink>
           </div>
 
-          <button type="submit" className="w-full py-3 rounded-xl font-semibold text-white bg-orange-500 hover:bg-orange-600 transition shadow-md">
-            FAZER LOGIN
+          <button type="submit" disabled={isPending} className="w-full py-3 rounded-xl font-semibold text-white bg-orange-500 hover:bg-orange-600 transition shadow-md disabled:opacity-50">
+            {isPending ? "Realizando login..." : "Realizar login"}
           </button>
 
         </form>

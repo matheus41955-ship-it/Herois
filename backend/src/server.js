@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true })) // Serve pra ler os formulários
 app.use(cors());
 
 // Uploads de imagem
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Rotas
 app.use('/usuarios', usuarioRoutes);

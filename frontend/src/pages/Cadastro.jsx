@@ -86,7 +86,7 @@ function Cadastro() {
           </div>
 
           <button type="submit" disabled={isPending} className="w-full py-3 rounded-xl font-semibold text-white bg-orange-500 hover:bg-orange-600 transition shadow-md disabled:opacity-50">
-            SE TORNAR UM AGENTE
+            {isPending ? "Realizando cadastro..." : "Se tornar uma agente!"}
           </button>
 
         </form>
