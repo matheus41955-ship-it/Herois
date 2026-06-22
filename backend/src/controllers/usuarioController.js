@@ -152,7 +152,7 @@ async function atualizarFoto(req, res) {
 
         const porta = process.env.PORT
         
-        const urlImagem = `http://localhost:${porta}/uploads/${req.file.filename}`;
+        const urlImagem = `http://localhost:${porta}/uploads/usuarios/${req.file.filename}`;
 
         await usuarioModel.atualizarFoto(id_usuario, urlImagem);
         res.json({

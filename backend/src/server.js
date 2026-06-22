@@ -7,6 +7,7 @@ dotenv.config();
 
 // Arquivos de routes aqui
 const usuarioRoutes = require('./routes/usuarioRoute');
+const heroiRoutes = require('./routes/heroiRoutes');
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Rotas
 app.use('/usuarios', usuarioRoutes);
+app.use('/herois', heroiRoutes);
 
 // Porta do servidor
 const porta = process.env.PORT

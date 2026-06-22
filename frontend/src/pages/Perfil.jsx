@@ -9,6 +9,7 @@ import { useEditarUsuario } from "../hooks/useEditarUsuario";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { NavLink } from "react-router-dom";
 
 
 function Perfil() {
@@ -104,6 +105,14 @@ function Perfil() {
                 <div className="min-w-screen p-10">
 
                     <div className="bg-white w-full rounded-3xl p-10 shadow-xl">
+
+                        <div className="grid grid-cols-3 w-full mb-10"> {/* Grid caso queira fazer algo dps, sla notas mentais fodas */}
+                            <div className="justify-self-start">
+                                <NavLink to="/inicio" className="text-orange-600 font-bold hover:text-orange-700 transition">← Voltar</NavLink>
+                            </div>
+                            <div className="justify-self-center"></div>
+                            <div className="justify-self-end"></div>
+                        </div>
 
                         <div className="flex items-center gap-8">
 

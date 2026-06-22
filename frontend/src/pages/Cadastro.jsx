@@ -33,9 +33,7 @@ function Cadastro() {
 
     mutate({ nome, usuario, email, senha }, {
       onSuccess: () => {
-        setTimeout(() => {
-          navigate('/login');
-        }, 1500);
+        navigate('/login');
       }
     })
   }
