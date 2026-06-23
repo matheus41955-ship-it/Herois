@@ -13,4 +13,10 @@ async function mostrarHerois() {
     return rows;
 }
 
-module.exports = { mostrarHerois }
+async function addHeroi(nome, avatar, classe, poder, preco_compra, preco_venda) {
+    const sql = "INSERT INTO heroi (nome, avatar, classe, poder, preco_compra, preco_venda) VALUES (?, ?, ?, ?, ?, ?)";
+    const [resultado] = await db.execute(sql, [nome, avatar, classe, poder, preco_compra, preco_venda]);
+    return resultado;
+}
+
+module.exports = { mostrarHerois, addHeroi }
