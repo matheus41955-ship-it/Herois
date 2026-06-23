@@ -1,4 +1,5 @@
 import Header from "../assets/components/Header";
+import AddHeroi from "../assets/components/AddHeroi";
 import { useHerois } from "../hooks/useHerois";
 import { useState } from "react";
 
@@ -43,10 +44,18 @@ function Inicio() {
                 <Header />
 
                 <div className="p-10 flex-1 flex flex-col">
-
-                    <h1 className="text-transparent font-bold text-4xl bg-linear-to-r from-orange-300 to-orange-400 bg-clip-text mb-10">
-                        PÁGINA DOS HERÓIS:
-                    </h1>
+                    <div className="w-full grid grid-cols-3">
+                        <div className="justify-self-start">
+                            <h1 className="text-transparent font-bold text-4xl bg-linear-to-r from-orange-300 to-orange-400 bg-clip-text mb-10">
+                            PÁGINA DOS HERÓIS:
+                            </h1>
+                        </div>
+                        <div className="justify-self-center"></div>
+                        <div className="justify-self-end flex gap-3">
+                            <AddHeroi />
+                        </div>
+                        
+                    </div>
 
                     <div className="flex gap-3 w-full justify-center">
                         <button onClick={() => setFiltroTime("todos")} className={`rounded p-2 ${filtroTime === 'todos' ? 'bg-orange-600' : 'bg-gray-700'}`}>Todos os heróis</button>

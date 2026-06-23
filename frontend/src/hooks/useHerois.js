@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient, useMutation, QueryClient } from "@tanstack/react-query";
-import { getHerois, addHeroi } from "../services/heroiService";
-import { use } from "react";
+import { getHerois, addHeroi, fetchGuilda } from "../services/heroiService";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -19,6 +18,7 @@ export const useAddHeroi = () => {
 
         onSuccess: (data) => {
             toast.success(data?.mensagem || "Sucesso!");
+            queryClient.invalidateQueries(["herois"]);
         },
 
         onError: (erro) => {
@@ -31,5 +31,12 @@ export const useAddHeroi = () => {
             }
             toast.error(erro.message || "Erro ao adicionar herói");
         }
+    })
+}
+
+export const useGuilda = () => {
+    return useQuery({
+        queryKey: ["guilda"],
+        queryFn: fetchGuilda
     })
 }
