@@ -88,7 +88,7 @@ function AddHeroi() {
         {/* BOTÃO NA PÁGINA INICIAL */}
         <div className="justify-self-end flex gap-3 items-center">
             <button onClick={() => setAberto(true)} className="font-bold cursor-pointer bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition">+ Adicionar Herói</button>
-             <NavLink to="/time" className="bg-white text-[#242222] font-bold hover:bg-slate-200 transition rounded-lg p-2">Gerenciar Guilda</NavLink>
+             <NavLink to="/time" className="bg-white text-[#242222] font-bold hover:bg-slate-200 transition rounded-lg p-2">Gerenciar Time</NavLink>
         </div>
 
       {/* MODAL */}

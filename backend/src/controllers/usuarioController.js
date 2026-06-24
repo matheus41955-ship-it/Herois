@@ -151,8 +151,8 @@ async function atualizarFoto(req, res) {
         }
 
         const porta = process.env.PORT
-        
-        const urlImagem = `http://localhost:${porta}/uploads/usuarios/${req.file.filename}`;
+        const baseUrl = process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : `http://localhost:${porta}`;
+        const urlImagem = `${baseUrl}/uploads/usuarios/${req.file.filename}`;
 
         await usuarioModel.atualizarFoto(id_usuario, urlImagem);
         res.json({

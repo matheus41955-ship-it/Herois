@@ -24,9 +24,10 @@ CREATE TABLE time (
 CREATE TABLE heroi (
 	id_heroi INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    avatar VARCHAR(2048) NOT NULL DEFAULT 'https://upload.wikimedia.org/wikipedia/commons/0/03/Sem_imagem.jpg',
+    avatar VARCHAR(2048) NOT NULL,
     classe ENUM('herói','vilão','anti-heroi') NOT NULL,
     poder INT NOT NULL,
+    xp INT NOT NULL DEFAULT 0,
     nivel INT NOT NULL DEFAULT 1,
     preco_compra INT NOT NULL,
     preco_venda INT NOT NULL,
@@ -40,6 +41,7 @@ CREATE TABLE missao (
     id_missao INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao VARCHAR(500) NOT NULL DEFAULT 'Nenhuma descrição.',
+    concluido ENUM("Sim", "Não") NOT NULL DEFAULT "Não",
     id_heroi INT NOT NULL,
 
     FOREIGN KEY (id_heroi)

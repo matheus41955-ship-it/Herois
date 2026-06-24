@@ -10,7 +10,12 @@ export const addHeroi = async (dados) => {
     return resposta.data;
 }
 
-export const fetchGuilda = async () => {
-    const resposta = await api.get("/herois/guilda");
+export const comprarHeroi = async (id_heroi) => {
+    const resposta = await api.post(`/herois/${id_heroi}/comprar`);
+    return resposta.data;
+}
+
+export const venderHeroi = async (id_heroi) => {
+    const resposta = await api.post(`/herois/${id_heroi}/vender`);
     return resposta.data;
 }

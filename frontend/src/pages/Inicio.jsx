@@ -1,9 +1,10 @@
 import Header from "../assets/components/Header";
 import AddHeroi from "../assets/components/AddHeroi";
-import { useHerois } from "../hooks/useHerois";
+import { useHerois, useComprarHeroi } from "../hooks/useHerois";
 import { useState } from "react";
 
 function Inicio() {
+    const { mutate: comprarHeroi, isPending } = useComprarHeroi();
     const { data: herois = [], isLoading } = useHerois();
     const [index, setIndex] = useState(0);
 
@@ -36,7 +37,13 @@ function Inicio() {
             return a.poder - b.poder;
         }
         return 0;
-    })
+    });
+
+    function handleComprar(id_heroi) {
+        const confirmacao = window.confirm("Tem certeza que deseja comprar esse herói?");
+        if (!confirmacao) return;
+        comprarHeroi(id_heroi);
+    }
 
     return (
         <div className="min-h-screen flex">
@@ -85,7 +92,7 @@ function Inicio() {
                                             <p className="text-sm text-gray-800 mb-4"><strong>Time:</strong> {heroi.time}</p>
                                             <p className="text-sm text-gray-800 text-center mb-1"><strong>Preço:</strong> {heroi.preco_compra}</p>
 
-                                            <button disabled={!podeComprar(heroi)} className={`rounded-4xl font-bold transition w-full ${podeComprar(heroi)? "bg-orange-500 hover:bg-orange-600 cursor-pointer text-white" : "bg-gray-400 text-gray-200"}`}>{podeComprar(heroi) ? "COMPRAR" : "RECRUTADO"}</button>
+                                            <button onClick={() => handleComprar(heroi.id_heroi)} disabled={!podeComprar(heroi) || isPending} className={`rounded-4xl font-bold transition w-full ${podeComprar(heroi)? "bg-orange-500 hover:bg-orange-600 cursor-pointer text-white" : "bg-gray-400 text-gray-200"}`}>{podeComprar(heroi) ? (isPending ? "Comprando..." : "COMPRAR") : "RECRUTADO"}</button>
                                         </div>
                                     ))}
                                 </div>

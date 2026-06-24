@@ -8,6 +8,8 @@ dotenv.config();
 // Arquivos de routes aqui
 const usuarioRoutes = require('./routes/usuarioRoute');
 const heroiRoutes = require('./routes/heroiRoutes');
+const guildaRoutes = require('./routes/guildaRoute');
+const missaoRoutes = require('./routes/missaoRoute');
 
 const app = express();
 app.use(express.json());
@@ -20,6 +22,8 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 // Rotas
 app.use('/usuarios', usuarioRoutes);
 app.use('/herois', heroiRoutes);
+app.use('/guildas', guildaRoutes);
+app.use('/missoes', missaoRoutes);
 
 // Porta do servidor
 const porta = process.env.PORT
